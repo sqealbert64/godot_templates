@@ -4,19 +4,21 @@ var current_state: State
 var states: Dictionary = {}
 
 @export var initial_state: State
+@export var debug_mode: bool
 
 func _ready() -> void:
 	for child in get_children():
 		if child is State:
 			states[child.name.to_lower()] = child
 			child.change_state.connect(on_child_change_state)
-	print(states)
 	
 	if initial_state:
 		current_state = initial_state
 		initial_state.enter()
 
 func _process(delta: float) -> void:
+	if debug_mode:
+		Global.debug.add_debug_property("State",current_state,1)
 	if current_state:
 		current_state.Update(delta)
 
